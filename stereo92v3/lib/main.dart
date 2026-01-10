@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:volume_controller/volume_controller.dart';
 import 'config.dart';
 import 'dart:async';
 
@@ -28,59 +29,110 @@ class RadioPlayer extends StatefulWidget {
 }
 
 class _RadioPlayerState extends State<RadioPlayer> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final VolumeController _volumeController = VolumeController();
+  AudioPlayer? _audioPlayer;
+  StreamSubscription<PlayerState>? _playerStateSub;
+  bool _playerReady = false;
   bool _isPlaying = false;
   bool _isLoading = false;
   double _volume = 0.5;
-  final String radioTitle = "Stereo 92 Más Radio";
+  final String radioTitle = "Stereo 92 Mÿs Radio";
   int? _shutdownTimer; // Tiempo en minutos para el temporizador de apagado
   late Timer? _timer; // Temporizador
 
   @override
   void initState() {
     super.initState();
-    _audioPlayer.setVolume(_volume);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initVolume();
+      _initPlayer();
+    });
+
+    _timer = null;
+  }
+
+  Future<void> _initVolume() async {
+    try {
+      final currentVolume = await _volumeController.getVolume();
+      if (!mounted) return;
+      setState(() {
+        _volume = currentVolume;
+      });
+    } catch (_) {
+      // Ignore failures and keep the default slider value.
+    }
+
+    _volumeController.listener((volume) {
+      if (!mounted) return;
+      setState(() {
+        _volume = volume;
+      });
+    });
+  }
+
+  Future<void> _initPlayer() async {
+    if (!mounted) return;
+
+    final player = AudioPlayer();
+    player.setVolume(1.0);
 
     // Escuchar cambios en el estado del reproductor
-    _audioPlayer.playerStateStream.listen((playerState) {
+    _playerStateSub = player.playerStateStream.listen((playerState) {
       final isPlaying = playerState.playing;
       final isBuffering =
           playerState.processingState == ProcessingState.buffering;
 
+      if (!mounted) return;
       setState(() {
         _isPlaying = isPlaying;
         _isLoading = isBuffering;
       });
     });
 
-    _timer = null;
+    if (!mounted) return;
+    setState(() {
+      _audioPlayer = player;
+      _playerReady = true;
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
-    _audioPlayer.dispose();
+    _playerStateSub?.cancel();
+    _audioPlayer?.dispose();
+    _volumeController.removeListener();
     super.dispose();
   }
 
   Future<void> _togglePlayPause() async {
+    final player = _audioPlayer;
+    if (player == null) {
+      return;
+    }
+
     if (_isPlaying) {
-      await _audioPlayer.pause();
+      await player.pause();
     } else {
-      await _audioPlayer.setUrl(Config.streamUrl);
-      await _audioPlayer.play();
+      await player.setUrl(Config.streamUrl);
+      await player.play();
     }
   }
 
   Future<void> _playRadio() async {
+    final player = _audioPlayer;
+    if (player == null) {
+      return;
+    }
+
     try {
       setState(() {
         _isLoading = true;
       });
-      await _audioPlayer.setUrl(Config.streamUrl);
-      await _audioPlayer.play();
+      await player.setUrl(Config.streamUrl);
+      await player.play();
     } catch (e) {
-      _showErrorDialog('Error al reproducir la radio. Verifica tu conexión.');
+      _showErrorDialog('Error al reproducir la radio. Verifica tu conexi½n.');
     } finally {
       setState(() {
         _isLoading = false;
@@ -89,13 +141,18 @@ class _RadioPlayerState extends State<RadioPlayer> {
   }
 
   Future<void> _pauseRadio() async {
+    final player = _audioPlayer;
+    if (player == null) {
+      return;
+    }
+
     try {
       setState(() {
         _isLoading = true;
       });
-      await _audioPlayer.pause();
+      await player.pause();
     } catch (e) {
-      _showErrorDialog('Error al pausar la reproducción. Intenta nuevamente.');
+      _showErrorDialog('Error al pausar la reproducci½n. Intenta nuevamente.');
     } finally {
       setState(() {
         _isLoading = false;
@@ -107,7 +164,7 @@ class _RadioPlayerState extends State<RadioPlayer> {
     setState(() {
       _volume = value;
     });
-    _audioPlayer.setVolume(_volume);
+    _volumeController.setVolume(_volume);
   }
 
   void _setShutdownTimer(int minutes) {
@@ -119,7 +176,7 @@ class _RadioPlayerState extends State<RadioPlayer> {
     });
     _timer = Timer(Duration(minutes: minutes), () {
       _pauseRadio(); // Pausar la radio cuando el temporizador termine
-      _showInfoDialog('La reproducción se ha detenido automáticamente.');
+      _showInfoDialog('La reproducci½n se ha detenido automÿticamente.');
     });
   }
 
@@ -145,7 +202,7 @@ class _RadioPlayerState extends State<RadioPlayer> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Información'),
+            title: const Text('Informaci½n'),
             content: Text(message),
             actions: [
               TextButton(
@@ -181,7 +238,8 @@ class _RadioPlayerState extends State<RadioPlayer> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
-            if (_isLoading) const CircularProgressIndicator(color: Colors.red),
+            if (_isLoading || !_playerReady)
+              const CircularProgressIndicator(color: Colors.red),
             const SizedBox(height: 20),
             Slider(
               value: _volume,
@@ -189,7 +247,7 @@ class _RadioPlayerState extends State<RadioPlayer> {
               max: 1.0,
               activeColor: Colors.red,
               inactiveColor: Colors.white,
-              onChanged: _setVolume,
+              onChanged: _playerReady ? _setVolume : null,
             ),
             const SizedBox(height: 20),
             IconButton(
@@ -198,7 +256,7 @@ class _RadioPlayerState extends State<RadioPlayer> {
                 color: Colors.red,
               ),
               iconSize: 80.0,
-              onPressed: _togglePlayPause,
+              onPressed: _playerReady ? _togglePlayPause : null,
             ),
             const SizedBox(height: 20),
             ElevatedButton(
