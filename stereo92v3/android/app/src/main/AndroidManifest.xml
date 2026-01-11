@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
-        android:label="stereo92v3"
+        android:label="Stereo92fm"
         android:name="${applicationName}"
         android:icon="@mipmap/logo">
         <activity

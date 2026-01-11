@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.stereo92v3"
+    namespace = "com.focuzlab.Stereo92fm"
     compileSdk = 35
     ndkVersion = "27.0.12077973"
 
@@ -27,9 +27,9 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.stereo92v3"
+        applicationId = "com.focuzlab.Stereo92fm"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
     }
