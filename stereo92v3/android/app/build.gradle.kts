@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -5,8 +8,14 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
 android {
-    namespace = "com.focuzlab.Stereo92fm"
+    namespace = "com.focuzlab.stereo92fm"
     compileSdk = 35
     ndkVersion = "27.0.12077973"
 
@@ -19,24 +28,36 @@ android {
         jvmTarget = "17" // Cambiado a 17 para evitar errores
     }
 
-    // Configura Gradle para usar un JDK específico
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(21)) // Especifica Java 21
+            languageVersion.set(JavaLanguageVersion.of(21))
         }
     }
 
     defaultConfig {
-        applicationId = "com.focuzlab.Stereo92fm"
-        minSdk = 21
+        applicationId = "com.focuzlab.stereo92fm"
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
     }
 
+    signingConfigs {
+        if (keystorePropertiesFile.exists()) {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+            }
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 }
