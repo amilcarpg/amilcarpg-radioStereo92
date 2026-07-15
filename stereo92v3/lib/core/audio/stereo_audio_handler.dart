@@ -25,7 +25,7 @@ class StereoAudioHandler extends BaseAudioHandler
       MediaItem(
         id: defaultStreamUrl,
         title: 'Stereo 92 FM',
-        album: 'Más radio',
+        album: 'MÁS RADIO',
         playable: true,
       ),
     );

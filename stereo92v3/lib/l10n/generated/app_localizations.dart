@@ -114,7 +114,7 @@ abstract class AppLocalizations {
   /// No description provided for @stationTagline.
   ///
   /// In es, this message translates to:
-  /// **'Más radio'**
+  /// **'MÁS RADIO'**
   String get stationTagline;
 
   /// No description provided for @play.

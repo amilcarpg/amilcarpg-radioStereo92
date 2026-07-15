@@ -15,7 +15,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get stationName => 'Stereo 92 FM';
 
   @override
-  String get stationTagline => 'Más radio';
+  String get stationTagline => 'MÁS RADIO';
 
   @override
   String get play => 'Reproducir';

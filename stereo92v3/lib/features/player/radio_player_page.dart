@@ -289,8 +289,9 @@ class _Header extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white70,
-            fontSize: compact ? 14 : 16,
-            fontWeight: FontWeight.w500,
+            fontSize: compact ? 15 : 17,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 2.6,
           ),
         ),
       ],

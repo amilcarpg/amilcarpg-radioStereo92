@@ -5,7 +5,7 @@ import 'package:stereo92v3/l10n/generated/app_localizations.dart';
 void main() {
   test('loads all supported radio localizations', () async {
     const expectedTaglines = <String, String>{
-      'es': 'Más radio',
+      'es': 'MÁS RADIO',
       'en': 'More radio',
       'pt': 'Mais rádio',
       'fr': 'Plus de radio',
