@@ -56,6 +56,9 @@ unlinked_spec.ds
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
 *.jks
+**/android/app/google-services.json
+**/ios/Runner/GoogleService-Info.plist
+**/lib/firebase_options.dart
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -116,4 +119,5 @@ app.*.symbols
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+!stereo92v3/pubspec.lock
 !/dev/ci/**/Gemfile.lock
