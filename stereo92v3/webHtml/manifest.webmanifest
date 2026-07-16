@@ -1,0 +1,12 @@
+{
+  "name": "Radio Stereo 92",
+  "short_name": "Stereo 92",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090909",
+  "theme_color": "#9b0000",
+  "description": "Escucha Stereo 92 FM en vivo.",
+  "icons": [
+    { "src": "assets/stereo92.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

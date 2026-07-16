@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#9b0000" />
+    <meta name="description" content="Escucha Stereo 92 FM en vivo." />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/stereo92.png" />
+    <link rel="apple-touch-icon" href="assets/stereo92.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Radio Stereo 92</title>
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="player" aria-labelledby="station-name">
+        <header class="topbar">
+          <label class="language-control" for="language-select">
+            <span class="sr-only" data-i18n="language">Idioma</span>
+            <select id="language-select" aria-label="Idioma" data-i18n-aria="language">
+              <option value="es">ES</option>
+              <option value="en">EN</option>
+              <option value="pt">PT</option>
+              <option value="fr">FR</option>
+            </select>
+          </label>
+          <button id="privacy-button" class="icon-button" type="button" aria-haspopup="dialog" data-i18n-aria="privacy" title="Privacidad">
+            <span aria-hidden="true">⌁</span>
+            <span class="sr-only" data-i18n="privacy">Privacidad</span>
+          </button>
+        </header>
+
+        <div class="brand">
+          <img class="station-artwork" src="assets/stereo92.png" alt="" width="180" height="180" />
+          <h1 id="station-name">Stereo 92 FM</h1>
+          <p data-i18n="tagline">MÁS RADIO</p>
+        </div>
+
+        <p id="status" class="status" role="status" aria-live="polite">Lista para reproducir</p>
+
+        <div class="volume-row">
+          <label for="volume" data-i18n="volume">Volumen</label>
+          <input id="volume" type="range" min="0" max="100" value="50" />
+          <output id="volume-value" for="volume">50%</output>
+        </div>
+
+        <button id="play-button" class="play-button" type="button" aria-pressed="false">
+          <span id="play-icon" aria-hidden="true">▶</span>
+          <span id="play-label" class="sr-only">Reproducir</span>
+        </button>
+
+        <section class="timer" aria-labelledby="timer-heading">
+          <h2 id="timer-heading" class="sr-only" data-i18n="timerTitle">Temporizador de apagado</h2>
+          <div id="timer-controls" class="timer-controls">
+            <label for="timer-select" data-i18n="timerConfigure">Configurar temporizador de apagado</label>
+            <div class="timer-actions">
+              <select id="timer-select">
+                <option value="5">5 min</option>
+                <option value="10">10 min</option>
+                <option value="15">15 min</option>
+                <option value="30">30 min</option>
+                <option value="60">60 min</option>
+              </select>
+              <button id="timer-start" class="secondary-button" type="button" data-i18n="accept">Aceptar</button>
+            </div>
+          </div>
+          <div id="timer-active" class="timer-active" hidden>
+            <span id="timer-remaining" aria-live="polite"></span>
+            <button id="timer-cancel" class="text-button" type="button" data-i18n="timerCancel">Cancelar temporizador</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <audio id="radio-audio" preload="none"></audio>
+
+    <dialog id="consent-dialog" aria-labelledby="consent-title">
+      <form method="dialog">
+        <h2 id="consent-title" data-i18n="privacyTitle">Ayúdanos a mejorar</h2>
+        <p data-i18n="privacyMessage">Con tu permiso, recopilamos datos anónimos de estabilidad y uso para detectar fallos. La radio funciona igual si no aceptas.</p>
+        <div class="dialog-actions">
+          <button id="consent-decline" class="text-button" value="declined" type="submit" data-i18n="privacyDecline">Ahora no</button>
+          <button id="consent-accept" class="secondary-button" value="accepted" type="submit" data-i18n="privacyAccept">Aceptar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="config.js"></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>

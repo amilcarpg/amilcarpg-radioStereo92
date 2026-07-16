@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Standalone static radio player
+/webHtml/node_modules/
+/webHtml/.vite/
+/webHtml/.env*
+!/webHtml/.env.example
+/webHtml/config.local.js
