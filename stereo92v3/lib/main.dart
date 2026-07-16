@@ -10,7 +10,6 @@ import 'core/config/stream_config_repository.dart';
 import 'core/telemetry/telemetry_service.dart';
 import 'core/timer/shutdown_timer_controller.dart';
 import 'core/volume/system_volume_controller.dart';
-import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,9 +77,10 @@ Future<void> main() async {
 
 Future<bool> _initializeFirebase() async {
   try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    // Android/iOS load their Firebase settings from the native configuration
+    // files (google-services.json / GoogleService-Info.plist).  Do not depend
+    // on a locally generated firebase_options.dart file in CI.
+    await Firebase.initializeApp();
     return true;
   } catch (error) {
     if (kDebugMode) {
