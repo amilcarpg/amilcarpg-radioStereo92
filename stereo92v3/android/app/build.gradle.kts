@@ -20,7 +20,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.focuzlab.stereo92fm"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -40,7 +40,7 @@ android {
 
     defaultConfig {
         applicationId = "com.focuzlab.stereo92fm"
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = 35
         versionCode = 10
         versionName = "1.0.10"
